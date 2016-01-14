@@ -42,5 +42,32 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    Mux16(a=x, b=false, sel=zx, out=s1x);
+    Mux16(a=y, b=false, sel=zy, out=s1y);
+
+    // stage 1 output s1x and s1y
+
+    Not16(in=s1x, out=negatedx);
+    Not16(in=s1y, out=negatedy);
+
+    Mux16(a=s1x, b=negatedx, sel=nx, out=s2x);
+    Mux16(a=s1y, b=negatedy, sel=ny, out=s2y);
+
+    // stage 2 output s2x and s2y
+
+    And16(a=s2x, b=s2y, out=andedfx);
+    Add16(a=s2x, b=s2y, out=addedfx);
+    Mux16(a=andedfx, b=addedfx, sel=f, out=s3);
+
+    // stage 3 output s3
+    Not16(in=s3, out=s3n);
+    Mux16(a=s3, b=s3n, sel=no, out=t1);
+
+    // set the other inputs by comparison
+    Or16Way(in=t1, out=w3);
+    Not(in=w3, out=zr);
+
+    // set the negative bit
+    TopBit(in=t1, out=ng);
+    Or16(a=t1, b=false, out=out);
 }
