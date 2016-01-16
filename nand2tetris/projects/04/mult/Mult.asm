@@ -8,16 +8,31 @@
 
 // Put your code here.
 
+@2
+M=0
+
 @i
+M=0
 
 (LOOP)
-D=D-1
+@1
+D=M
 
 @END
 D;JEQ
 
+@0
+D=M
+
+@2
+M=M+D
+
+@1
+M=M-1
+
 @LOOP
 0;JMP
+
 (END)
 @END
 0; JMP
